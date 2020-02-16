@@ -27,13 +27,18 @@ module.exports = function (app) {
         return res.status(200).json({message: "The document was delete"});
     });
 
+    app.get('/documents', async (req, res) => {
+        let documents = await Documents.find().exec();
+        return res.status(200).json({documents: documents});
+    });
+
     app.get('/document/:id', async (req, res) => {
         if (req.params.id === "undefined" || !req.params.id)
             return res.status(400).json({message: "No specified ID found"});
         let document = await Documents.findById(req.params.id).exec();
         if (!document)
             return res.status(404).json({message: "Document not found"});
-        return res.status(200).json({id: document._id, name: document.name, filename: document.filename});
+        return res.status(200).json(document);
     });
 
     app.post('/document', upload.single('document'), async (req, res) => {
@@ -45,6 +50,6 @@ module.exports = function (app) {
             filename: req.file.filename
         });
         await document.save();
-        return res.status(200).json({id: document._id, name: document.name, path: document.filename});
+        return res.status(200).json(document);
     });
 };
