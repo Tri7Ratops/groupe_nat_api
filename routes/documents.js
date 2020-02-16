@@ -37,7 +37,6 @@ module.exports = function (app) {
     });
 
     app.post('/document', upload.single('document'), async (req, res) => {
-        console.log(req.file);
         if (!req.body.name || !req.file)
             return res.status(400).json({message: "Name or file missing"});
         let document = new Documents({
@@ -46,6 +45,6 @@ module.exports = function (app) {
             filename: req.file.filename
         });
         await document.save();
-        return res.status(200).json({id: document._id, name: document.name, filename: document.filename});
+        return res.status(200).json({id: document._id, name: document.name, path: document.filename});
     });
 };
