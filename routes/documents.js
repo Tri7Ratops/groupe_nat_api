@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const multer = require('multer');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -42,8 +43,12 @@ module.exports = function (app) {
     });
 
     app.post('/document', upload.single('document'), async (req, res) => {
-        if (!req.body.name || !req.file)
+        console.log(req.body.name);
+        console.log(req.file);
+        if (!req.body.name || !req.file) {
+            await fs.unlink(req.file.path, (err) => {});
             return res.status(400).json({message: "Name or file missing"});
+        }
         let document = new Documents({
             _id: new mongoose.Types.ObjectId(),
             name: req.body.name,
