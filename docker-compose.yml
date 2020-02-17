@@ -1,0 +1,7 @@
+app:
+  build: .
+  command: node app.js
+  volumes:
+    - .:/src
+  ports:
+    - "4242:4242"
